@@ -34,7 +34,6 @@ class FeedbackFile extends Component {
     this.input.addEventListener("input", this.onSelectFiles);
     this.container = this.getElement("container");
     this.error = this.getElement("error");
-    this.error.textContent = `Максимальный размер файла ${this.root.dataset.maxfilesize}`;
 
     this.error.remove();
   }
@@ -161,10 +160,17 @@ class FeedbackFile extends Component {
     }
     let isError = false;
     this.files.forEach((file) => {
+      const ext = file.name.split(".").slice(-1)[0];
       if (file.file.size > this.maxFileSize) {
         isError = true;
+        this.error.textContent = `Максимальный размер файла ${this.root.dataset.maxfilesize}`;
+      }
+      if (ext !== "doc" && ext !== "docx" && ext !== "pdf") {
+        isError = true;
+        this.error.textContent = `Файлы должны быть с расширение .doc, .docx, или .pdf`;
       }
     });
+
     if (isError) {
       this.root.classList.add("error");
       this.root.append(this.error);
